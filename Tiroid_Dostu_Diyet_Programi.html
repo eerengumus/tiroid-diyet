@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Tiroid Diyet">
+<title>Tiroid Dostu Diyet Programı</title>
+<style>
+  :root {
+    --pink-dark: #8B2252;
+    --pink-mid: #C2185B;
+    --pink-soft: #E91E63;
+    --pink-light: #F8BBD0;
+    --pink-pale: #FFF0F5;
+    --pink-bg: #FFFBFC;
+    --rose: #D4547A;
+    --rose-gold: #B76E79;
+    --mauve: #7B4B6A;
+    --cream: #FFF8F6;
+    --text: #3E2137;
+    --text-light: #6B4560;
+    --green-soft: #4A7C59;
+    --red-soft: #C0392B;
+    --gold: #C9A96E;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+    background: var(--pink-bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    padding-bottom: 60px;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, var(--pink-dark), var(--pink-mid));
+    color: white;
+    text-align: center;
+    padding: 40px 20px 30px;
+  }
+  .header-label {
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    opacity: 0.8;
+    margin-bottom: 16px;
+  }
+  .header h1 {
+    font-size: 32px;
+    font-weight: 300;
+    margin-bottom: 4px;
+  }
+  .header h2 {
+    font-size: 20px;
+    font-weight: 300;
+    color: var(--pink-light);
+    font-style: italic;
+  }
+  .header .dedication {
+    margin-top: 16px;
+    font-style: italic;
+    font-size: 14px;
+    opacity: 0.85;
+  }
+  .header .disclaimer {
+    margin-top: 20px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  /* NAV */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: white;
+    border-bottom: 2px solid var(--pink-light);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+    padding: 0 12px;
+    box-shadow: 0 2px 8px rgba(139,34,82,0.08);
+  }
+  .nav a {
+    display: inline-block;
+    padding: 12px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-light);
+    text-decoration: none;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+  }
+  .nav a:hover, .nav a:active {
+    color: var(--pink-mid);
+    border-bottom-color: var(--pink-mid);
+  }
+
+  /* SECTIONS */
+  .section {
+    padding: 28px 16px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .section + .section {
+    border-top: 1px solid var(--pink-light);
+  }
+  .section-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--pink-dark);
+    margin-bottom: 4px;
+  }
+  .section-subtitle {
+    font-size: 13px;
+    color: var(--rose-gold);
+    font-style: italic;
+    margin-bottom: 20px;
+  }
+
+  /* DIVIDER */
+  .divider {
+    text-align: center;
+    margin: 16px 0;
+  }
+  .divider::after {
+    content: '◆';
+    color: var(--rose-gold);
+    font-size: 10px;
+  }
+
+  /* CARDS */
+  .card-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  @media (min-width: 600px) {
+    .card-row { grid-template-columns: 1fr 1fr 1fr; }
+    .card-row.two-col { grid-template-columns: 1fr 1fr; }
+  }
+  .card {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    border-left: 4px solid var(--pink-soft);
+    box-shadow: 0 2px 8px rgba(139,34,82,0.06);
+  }
+  .card p {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* YENILECEK / KAÇINILACAK TABLE */
+  .food-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(139,34,82,0.08);
+    margin-bottom: 12px;
+  }
+  .food-table th {
+    padding: 14px 16px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-align: left;
+  }
+  .food-table th.yes {
+    background: var(--pink-mid);
+    color: white;
+  }
+  .food-table th.no {
+    background: var(--mauve);
+    color: white;
+  }
+  .food-table td {
+    padding: 11px 16px;
+    font-size: 14px;
+    border-bottom: 1px solid #f3e0ea;
+    background: white;
+  }
+  .food-table tr:last-child td { border-bottom: none; }
+  .food-note {
+    background: var(--pink-pale);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--text-light);
+    line-height: 1.6;
+  }
+
+  /* MEAL PLAN */
+  .meal-plan {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 12px;
+  }
+  .meal-table {
+    min-width: 700px;
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(139,34,82,0.08);
+    font-size: 13px;
+  }
+  .meal-table thead th {
+    background: var(--pink-mid);
+    color: white;
+    padding: 12px 10px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+  }
+  .meal-table thead th:first-child {
+    background: var(--pink-dark);
+  }
+  .meal-table tbody td {
+    padding: 10px;
+    border-bottom: 1px solid #f3e0ea;
+    background: white;
+    vertical-align: top;
+    text-align: center;
+    line-height: 1.5;
+  }
+  .meal-table tbody td:first-child {
+    background: var(--pink-pale);
+    font-weight: 700;
+    font-size: 12px;
+    text-align: center;
+    color: var(--pink-dark);
+    white-space: nowrap;
+  }
+  .meal-table tbody td:first-child small {
+    display: block;
+    font-weight: 400;
+    color: var(--rose-gold);
+    font-size: 11px;
+  }
+
+  /* ALTERNATIVES */
+  .alt-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(139,34,82,0.08);
+    margin-bottom: 12px;
+  }
+  .alt-table thead th {
+    background: var(--pink-mid);
+    color: white;
+    padding: 12px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: left;
+  }
+  .alt-table tbody td {
+    padding: 12px 14px;
+    font-size: 13px;
+    border-bottom: 1px solid #f3e0ea;
+    background: white;
+    vertical-align: top;
+    line-height: 1.7;
+  }
+  .alt-table tbody td:first-child {
+    background: var(--pink-pale);
+    font-weight: 700;
+    font-size: 12px;
+    color: var(--pink-dark);
+    white-space: nowrap;
+    text-align: center;
+    width: 100px;
+  }
+  .alt-table tbody td:first-child small {
+    display: block;
+    font-weight: 400;
+    color: var(--rose-gold);
+    font-size: 11px;
+  }
+
+  /* REMINDER BAR */
+  .reminder {
+    background: linear-gradient(135deg, var(--pink-pale), #fce4ec);
+    border-left: 4px solid var(--pink-mid);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--text);
+    margin-top: 12px;
+  }
+
+  /* MISTAKES SECTION */
+  .mistake-card {
+    background: white;
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 14px;
+    box-shadow: 0 2px 8px rgba(139,34,82,0.06);
+    border-left: 4px solid var(--rose);
+  }
+  .mistake-card .mistake-icon {
+    font-size: 22px;
+    margin-bottom: 6px;
+  }
+  .mistake-card h3 {
+    font-size: 16px;
+    color: var(--pink-dark);
+    margin-bottom: 6px;
+  }
+  .mistake-card p {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--text);
+  }
+  .mistake-card .tip {
+    margin-top: 10px;
+    background: var(--pink-pale);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--pink-dark);
+    font-weight: 500;
+  }
+
+  /* HEALTH GRID */
+  .health-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  @media (min-width: 600px) {
+    .health-grid { grid-template-columns: 1fr 1fr; }
+  }
+  .health-card {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(139,34,82,0.06);
+  }
+  .health-card h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--pink-dark);
+    margin-bottom: 6px;
+  }
+  .health-card p {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* BOTTOM BOXES */
+  .bottom-boxes {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 20px;
+  }
+  @media (min-width: 600px) {
+    .bottom-boxes { grid-template-columns: 1fr 1fr 1fr; }
+  }
+  .bottom-box {
+    background: linear-gradient(135deg, var(--pink-mid), var(--pink-dark));
+    color: white;
+    border-radius: 12px;
+    padding: 18px;
+    text-align: center;
+  }
+  .bottom-box h4 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+  }
+  .bottom-box p {
+    font-size: 13px;
+    line-height: 1.6;
+    opacity: 0.92;
+  }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    padding: 40px 20px;
+    background: var(--pink-pale);
+    margin-top: 20px;
+  }
+  .footer h3 {
+    font-size: 24px;
+    color: var(--pink-dark);
+    font-weight: 400;
+    margin-bottom: 8px;
+  }
+  .footer p {
+    font-size: 14px;
+    color: var(--rose-gold);
+    font-style: italic;
+  }
+
+  /* MOBILE UTILITIES */
+  ul.food-list { list-style: none; padding: 0; }
+  ul.food-list li { padding: 2px 0; }
+  ul.food-list li::before { content: '• '; color: var(--rose); }
+
+  .swipe-hint {
+    text-align: center;
+    font-size: 12px;
+    color: var(--rose-gold);
+    margin-bottom: 8px;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-label">Sağlıklı Yaşam Rehberi</div>
+  <h1>Tiroid Dostu</h1>
+  <h2>Diyet Programı</h2>
+  <p class="dedication">Sevgili Annem İçin Özenle Hazırlandı</p>
+  <div class="disclaimer"><strong>Önemli Not:</strong> Bu program genel bir rehberdir. Tiroid ilaçlarınız varsa mutlaka doktorunuz ve diyetisyeninizle görüşün.</div>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <a href="#ilkeler">İlkeler</a>
+  <a href="#besinler">Besinler</a>
+  <a href="#plan">Öğün Planı</a>
+  <a href="#alternatif">Alternatifler</a>
+  <a href="#hatalar">Sık Hatalar</a>
+  <a href="#saglik">Sağlık</a>
+</div>
+
+<!-- 1. TEMEL BESLENME İLKELERİ -->
+<div class="section" id="ilkeler">
+  <div class="section-title">Temel Beslenme İlkeleri</div>
+  <div class="section-subtitle">Günlük rutinin temeli</div>
+  <div class="divider"></div>
+  <div class="card-row">
+    <div class="card">
+      <p><strong>Öğün sıklığı:</strong> Günde 3 ana öğün + 1-2 ara öğün. Öğün atlamak kas kaybına ve daha da yavaşlayan metabolizmaya yol açar.</p>
+    </div>
+    <div class="card">
+      <p><strong>İlaç kullanımı:</strong> Tiroid ilaçları sabah aç karnına, en az 30-60 dk sonra kahvaltı yapılmalı. Kahve ilaç emilimini engeller.</p>
+    </div>
+    <div class="card">
+      <p><strong>Su ve egzersiz:</strong> Günde en az 2-2.5 litre su. 30 dakika yürüyüş metabolizmayı destekler. D vitamini ve B12 kontrol edilmeli.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 2. NE YEMELİ / NE YEMEMELİ -->
+<div class="section" id="besinler">
+  <div class="section-title">Ne Yemeli — Ne Yememeli?</div>
+  <div class="section-subtitle">Tiroid dostu besin rehberi</div>
+  <div class="divider"></div>
+
+  <!-- YENİLECEKLER -->
+  <table class="food-table" style="margin-bottom: 16px;">
+    <thead><tr><th class="yes">✓ YENİLECEKLER</th></tr></thead>
+    <tbody>
+      <tr><td>Yumurta, tavuk, hindi, somon, ton balığı</td></tr>
+      <tr><td>Mercimek, nohut, fasulye</td></tr>
+      <tr><td>Yoğurt, lor peyniri (az yağlı)</td></tr>
+      <tr><td>Brezilya fıstığı (2-3 adet/gün) — selenyum için</td></tr>
+      <tr><td>Yulaf, kinoa, bulgur, esmer pirinç</td></tr>
+      <tr><td>Tatlı patates, havuç, biber</td></tr>
+      <tr><td>Elma, armut, yaban mersini</td></tr>
+      <tr><td>Zeytinyağı, avokado</td></tr>
+    </tbody>
+  </table>
+
+  <!-- KAÇINILACAKLAR -->
+  <table class="food-table">
+    <thead><tr><th class="no">✗ KAÇINILACAKLAR</th></tr></thead>
+    <tbody>
+      <tr><td>Çiğ lahana, brokoli, karnabahar — guatrojen içerir</td></tr>
+      <tr><td>İşlenmiş şeker ve beyaz un ürünleri</td></tr>
+      <tr><td>Soya ürünleri — hormon emilimini engelleyebilir</td></tr>
+      <tr><td>Hazır ve paketli gıdalar</td></tr>
+      <tr><td>Alkol</td></tr>
+      <tr><td>Kahve — ilaçtan sonraki ilk bir saatte</td></tr>
+      <tr><td>Aşırı gluten — özellikle Hashimoto'da dikkat</td></tr>
+      <tr><td>Kızartmalar ve trans yağ içeren besinler</td></tr>
+    </tbody>
+  </table>
+
+  <div class="food-note">
+    <strong>Not:</strong> Brokoli ve lahana pişirilince guatrojen etkisi büyük ölçüde azalır. Çiğ değil buharda pişirip tüketerek faydalanabilirsiniz.
+  </div>
+</div>
+
+<!-- 3. HAFTALIK ÖĞÜN PLANI -->
+<div class="section" id="plan">
+  <div class="section-title">Haftalık Öğün Planı</div>
+  <div class="section-subtitle">Pazartesi'den Cuma'ya, günlük beslenme takvimi</div>
+  <div class="divider"></div>
+  <p class="swipe-hint">← Tabloyu yana kaydırın →</p>
+  <div class="meal-plan">
+    <table class="meal-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Pazartesi</th>
+          <th>Salı</th>
+          <th>Çarşamba</th>
+          <th>Perşembe</th>
+          <th>Cuma</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>KAHVALTI</strong><small>07:00</small></td>
+          <td>2 haşlanmış yumurta tam tahıllı ekmek beyaz peynir domates, salatalık</td>
+          <td>Yulaf ezmesi (50g) süt ile pişirilmiş yaban mersini, tarçın</td>
+          <td>Menemen (2 yumurta, domates biber) zeytin 5-6 adet</td>
+          <td>2 yumurta omlet ıspanak kaşar peyniri domates</td>
+          <td>Yulaf + chia pudingsi (gece hazırlandı) meyve, tarçın</td>
+        </tr>
+        <tr>
+          <td><strong>ARA ÖĞÜN</strong><small>10:30</small></td>
+          <td>1 avuç badem 1 elma</td>
+          <td>2-3 Brezilya fıstığı 1 muz</td>
+          <td>1 portakal kabak çekirdeği</td>
+          <td>1 armut 10-12 badem</td>
+          <td>Elma fıstık ezmesi</td>
+        </tr>
+        <tr>
+          <td><strong>ÖĞLE</strong><small>13:00</small></td>
+          <td>Izgara tavuk (150g) yeşil salata 4 kaşık bulgur pilavı</td>
+          <td>Fırın somon (150g) buharda brokoli tatlı patates püresi</td>
+          <td>Izgara kırmızı et (120g) bol salata tatlı patates</td>
+          <td>Ton balıklı salata zeytinyağı, limon roka, domates</td>
+          <td>Izgara hindi (150g) fırın sebzeler kabak, biber, patlıcan</td>
+        </tr>
+        <tr>
+          <td><strong>İKİNDİ</strong><small>16:00</small></td>
+          <td>Sade yoğurt (200g) chia + tarçın</td>
+          <td>Lor peyniri (100g) bal + ceviz</td>
+          <td>Yeşil çay avokado ekmek</td>
+          <td>Kefir (200ml) yaban mersini</td>
+          <td>Yoğurt keten tohumu yarım muz</td>
+        </tr>
+        <tr>
+          <td><strong>AKŞAM</strong><small>19:00</small></td>
+          <td>Mercimek çorbası zeytinyağlı salata tam tahıllı ekmek</td>
+          <td>Nohutlu ıspanak esmer pirinç cacık</td>
+          <td>Tavuk çorbası yeşil fasulye yarım fincan kinoa</td>
+          <td>Mercimek köftesi maydanozlu salata ayran</td>
+          <td>Kuru fasulye bulgur pilavı salata</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="reminder">
+    <strong>Hatırlatıcı:</strong> Her gün 2-2.5 L su • Tiroid ilaçları sabah aç karnına • Brezilya fıstığı (2-3 adet) selenyum için • Pişmiş brokoli tercih edin • Günde 30 dakika yürüyüş metabolizmayı destekler
+  </div>
+</div>
+
+<!-- 4. ALTERNATİFLER -->
+<div class="section" id="alternatif">
+  <div class="section-title">Öğünleri Çeşitlendirin</div>
+  <div class="section-subtitle">Aynı yemeklerden sıkılmamak için alternatif seçenekler</div>
+  <div class="divider"></div>
+  <table class="alt-table">
+    <thead>
+      <tr>
+        <th>Öğün</th>
+        <th>Mevcut Seçenekler</th>
+        <th>Çeşitlendirme Önerileri — Rotasyonda kullanın</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>KAHVALTI</strong><small>07:00</small></td>
+        <td>
+          <ul class="food-list">
+            <li>Haşlanmış / omlet yumurta</li>
+            <li>Yulaf ezmesi + meyve</li>
+            <li>Menemen</li>
+            <li>Chia pudingsi</li>
+          </ul>
+        </td>
+        <td>
+          <ul class="food-list">
+            <li>Kinoa porridge — kinoa, süt, tarçın, ceviz</li>
+            <li>Avokado ekmek + haşlanmış yumurta + roka</li>
+            <li>Smoothie bowl — muz, yaban mersini, yulaf</li>
+            <li>Tam buğday gözleme + lor + ıspanak</li>
+            <li>Karabuğday krep + yoğurt + meyve</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td><strong>ARA ÖĞÜN</strong><small>10:30</small></td>
+        <td>
+          <ul class="food-list">
+            <li>Badem + elma</li>
+            <li>Brezilya fıstığı + muz</li>
+            <li>Portakal + kabak çekirdeği</li>
+            <li>Armut + badem</li>
+          </ul>
+        </td>
+        <td>
+          <ul class="food-list">
+            <li>Humus + havuç/salatalık çubuğu</li>
+            <li>Karışık kuruyemiş — fındık, ceviz, badem</li>
+            <li>Muzlu fıstık ezmeli smoothie</li>
+            <li>Elma + tarçın + 1 kaşık tahin</li>
+            <li>Hindistan cevizi + kuru kayısı</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td><strong>ÖĞLE</strong><small>13:00</small></td>
+        <td>
+          <ul class="food-list">
+            <li>Izgara tavuk + bulgur</li>
+            <li>Fırın somon + brokoli</li>
+            <li>Ton balıklı salata</li>
+            <li>Izgara et + salata</li>
+          </ul>
+        </td>
+        <td>
+          <ul class="food-list">
+            <li>Sardalye + esmer pirinç + roka salatası</li>
+            <li>Karides ızgara + kinoa + yeşillik</li>
+            <li>Nohut köfte + cacık + bulgur</li>
+            <li>Tavuk sote + mantar, biber + tatlı patates</li>
+            <li>Balık buğulama + zeytinyağlı sebze</li>
+            <li>Zeytinyağlı bakla + lor peyniri</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td><strong>İKİNDİ</strong><small>16:00</small></td>
+        <td>
+          <ul class="food-list">
+            <li>Yoğurt + chia + tarçın</li>
+            <li>Lor + bal + ceviz</li>
+            <li>Kefir + yaban mersini</li>
+            <li>Yeşil çay + avokado</li>
+          </ul>
+        </td>
+        <td>
+          <ul class="food-list">
+            <li>Bitter çikolata (%70+) 2-3 kare + badem</li>
+            <li>Sıcak süt + kakao + tarçın</li>
+            <li>Yoğurt + ev yapımı granola (şekersiz)</li>
+            <li>Ricotta + ceviz + taze incir</li>
+            <li>Haydari — yoğurt, sarımsak, nane</li>
+            <li>Meyve salatası (elma, armut, nar) + tahin</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td><strong>AKŞAM</strong><small>19:00</small></td>
+        <td>
+          <ul class="food-list">
+            <li>Mercimek çorbası</li>
+            <li>Nohutlu ıspanak + pirinç</li>
+            <li>Tavuk çorbası + fasulye</li>
+            <li>Mercimek köftesi</li>
+          </ul>
+        </td>
+        <td>
+          <ul class="food-list">
+            <li>Sebzeli kinoa risotto — mantar, ıspanak</li>
+            <li>Zeytinyağlı barbunya + tam tahıllı ekmek</li>
+            <li>Izgara balık + fırın sebze</li>
+            <li>Tavuk sote + buharda brokoli + pirinç</li>
+            <li>Nohut güveç + domates, biber + cacık</li>
+            <li>Karışık sebze çorbası + lor ekmek üstü</li>
+          </ul>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="reminder">
+    <strong>İpucu:</strong> Haftada en az 2 kez balık tüketin • Protein her öğünün bir parçası olmalı • Renkli sebze tabağı daha fazla antioksidan demektir • Yeni bir tarif denemek motivasyonu artırır
+  </div>
+</div>
+
+<!-- 5. SIK YAPILAN HATALAR (YENİ BÖLÜM) -->
+<div class="section" id="hatalar">
+  <div class="section-title">Sık Yapılan Hatalar</div>
+  <div class="section-subtitle">Hipotiroidizmde kilo vermeyi zorlaştıran yaygın yanlışlar</div>
+  <div class="divider"></div>
+
+  <div class="mistake-card">
+    <div class="mistake-icon">⚠️</div>
+    <h3>Az Yemek Yiyerek Kilo Vermeye Çalışmak</h3>
+    <p>Hipotiroidizmde metabolizma zaten yavaşlamış durumdadır. Öğün atlamak veya çok az yemek vücudu "açlık moduna" sokar. Vücut tehlike algılar, kortizol (stres hormonu) yükselir ve enerji tasarrufu için yağ depolamaya öncelik verir. Sonuç: daha az yiyor ama kilo veremiyor, hatta alıyorsunuz.</p>
+    <div class="tip">✓ Doğrusu: Az ama sık yiyin. 3 ana öğün + 1-2 ara öğün ile metabolizmayı çalışır tutun. Kaloriyi aşırı kısmayın — vücudunuz yakıt istiyor.</div>
+  </div>
+
+  <div class="mistake-card">
+    <div class="mistake-icon">💊</div>
+    <h3>Levotiroksin'i Yanlış Zamanda veya Yanlış Şekilde Almak</h3>
+    <p>Levotiroksin (Euthyrox, Tefor, Levotiron) sabah aç karnına alınmalıdır. Kahve, süt, kalsiyum takviyeleri, demir hapları ve yiyecekler ilacın emilimini ciddi ölçüde düşürür. İlacı kahvaltıyla birlikte veya kahve içtikten hemen sonra almak, ilacın etkisini %50'ye kadar azaltabilir.</p>
+    <div class="tip">✓ Doğrusu: Sabah kalkar kalkmaz bir bardak su ile alın. En az 30-60 dakika bekleyin, sonra kahvaltı yapın. Kahve en erken ilaçtan 1 saat sonra. Her gün aynı saatte alın.</div>
+  </div>
+
+  <div class="mistake-card">
+    <div class="mistake-icon">🥦</div>
+    <h3>Guatrojen Korkusuyla Sebzelerden Kaçınmak</h3>
+    <p>Brokoli, lahana, karnabahar gibi sebzelerin çiğ halde guatrojen içerdiği doğrudur. Ancak birçok kişi bu yüzden bu sebzeleri tamamen bırakır. Oysa pişirildiğinde guatrojen etkisi büyük ölçüde yok olur ve bu sebzeler antioksidan, lif ve vitamin açısından çok değerlidir.</p>
+    <div class="tip">✓ Doğrusu: Çiğ yerine buharda veya haşlayarak pişirin. Haftada 2-3 kez pişmiş brokoli/karnabahar yemek sorun yaratmaz.</div>
+  </div>
+
+  <div class="mistake-card">
+    <div class="mistake-icon">💧</div>
+    <h3>Yetersiz Su Tüketimi</h3>
+    <p>Hipotiroidizmde vücut zaten sıvı tutmaya eğilimlidir. Az su içmek bu durumu kötüleştirir, ödem hissini artırır ve metabolizmayı daha da yavaşlatır. Birçok kişi "şişkinlik yapıyor" diye suyu azaltır — bu tam tersini yapar.</p>
+    <div class="tip">✓ Doğrusu: Günde en az 2-2.5 litre su için. Sabah ilk iş bir bardak ılık su ile güne başlayın. Su metabolizmayı hızlandırır ve ödemi azaltır.</div>
+  </div>
+
+  <div class="mistake-card">
+    <div class="mistake-icon">🛋️</div>
+    <h3>Yorgunluğu Bahane Ederek Hareketsiz Kalmak</h3>
+    <p>Hipotiroidizmin en yaygın belirtisi yorgunluktur ve hareket etmemek için güçlü bir bahane yaratır. Ancak düzenli hafif egzersiz tiroid hormonlarının etkisini artırır, metabolizmayı canlandırır ve enerji seviyesini yükseltir.</p>
+    <div class="tip">✓ Doğrusu: Ağır spor şart değil. Günde 30 dakika tempolu yürüyüş veya hafif pilates bile büyük fark yaratır. Küçük başlayın, rutine dönüştürün.</div>
+  </div>
+
+  <div class="mistake-card">
+    <div class="mistake-icon">🔬</div>
+    <h3>Kan Değerlerini Takip Etmemek</h3>
+    <p>Levotiroksin dozu sabit kalsa bile vücudun ihtiyacı zamanla değişebilir (mevsim, stres, kilo değişimi). TSH, T3, T4 değerlerini düzenli kontrol ettirmemek ilacın yetersiz veya fazla kalmasına yol açar.</p>
+    <div class="tip">✓ Doğrusu: Her 3-6 ayda bir TSH, serbest T3, serbest T4 kontrolü yaptırın. D vitamini, B12, demir ve ferritin de yılda bir kontrol edilmeli.</div>
+  </div>
+
+  <div class="mistake-card">
+    <div class="mistake-icon">🌙</div>
+    <h3>Uykuyu Hafife Almak</h3>
+    <p>Yetersiz veya düzensiz uyku kortizol seviyesini yükseltir, tiroid hormon dengesini bozar ve insülin direncini artırır. Gece geç saatlere kadar ayakta kalmak kilo verme çabasını sabote eder.</p>
+    <div class="tip">✓ Doğrusu: 7-8 saat düzenli uyku hedefleyin. Her gece aynı saatte yatmaya çalışın. Uyku, tiroid hormon döngüsünün düzenlenmesi için kritik öneme sahiptir.</div>
+  </div>
+</div>
+
+<!-- 6. GENEL SAĞLIK ÖNERİLERİ -->
+<div class="section" id="saglik">
+  <div class="section-title">Genel Sağlık Önerileri</div>
+  <div class="section-subtitle">Tiroid sağlığını destekleyen yaşam alışkanlıkları</div>
+  <div class="divider"></div>
+
+  <div class="health-grid">
+    <div class="health-card">
+      <h4>🩸 Kan Tahlili</h4>
+      <p>TSH, T3, T4, D vitamini, B12 ve demir değerlerinizi düzenli kontrol ettirin.</p>
+    </div>
+    <div class="health-card">
+      <h4>🧘 Stres Yönetimi</h4>
+      <p>Kronik stres kortizolü yükselterek tiroid fonksiyonunu bozar. Günlük nefes egzersizleri yapın.</p>
+    </div>
+    <div class="health-card">
+      <h4>🚶 Hareket</h4>
+      <p>Günde 30 dakika yürüyüş veya hafif pilates metabolizmayı canlandırır, kilo kontrolüne yardımcı olur.</p>
+    </div>
+    <div class="health-card">
+      <h4>☀️ D Vitamini</h4>
+      <p>Güneş ışığı ve D vitamini takviyesi tiroid sağlığını destekler; doz için doktorunuza başvurun.</p>
+    </div>
+    <div class="health-card">
+      <h4>😴 Uyku</h4>
+      <p>Düzenli ve yeterli uyku (7-8 saat) hormon düzenlemesi için kritik önem taşır.</p>
+    </div>
+    <div class="health-card">
+      <h4>🍵 İçecekler</h4>
+      <p>Yeşil çay, ıhlamur, zencefil çayı tercih edin. Şekerli ve gazlı içeceklerden uzak durun.</p>
+    </div>
+  </div>
+
+  <div class="bottom-boxes">
+    <div class="bottom-box">
+      <h4>💊 İlaç Zamanlaması</h4>
+      <p>Levotiroksin sabah aç karnına alınmalı. Kahvaltıya en az 30-60 dakika ara verin. Kahveyi ilaçtan en az 1 saat sonra için. İlaç saatini her gün aynı tutun.</p>
+    </div>
+    <div class="bottom-box">
+      <h4>🎯 Günlük Hedefler</h4>
+      <p>2-2.5 litre su tüketimi · 30 dakika tempolu yürüyüş · 3 ana öğün + 1-2 ara öğün · 7-8 saat düzenli uyku</p>
+    </div>
+    <div class="bottom-box">
+      <h4>📋 Düzenli Kontrol</h4>
+      <p>TSH, T3, T4 — her 3-6 ayda bir · D vitamini ve B12 — yılda bir · Demir ve ferritin takibi · Tansiyon ve kilo kontrolü</p>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <h3>Geçmiş olsun.</h3>
+  <p>Bu program sevgiyle hazırlanmıştır.</p>
+</div>
+
+</body>
+</html>
