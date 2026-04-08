@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Diyabet Diyet">
+<title>Diyabet Dostu Diyet Programı</title>
+<style>
+  :root {
+    --blue-dark: #1A3A5C;
+    --blue-mid: #2563EB;
+    --blue-soft: #3B82F6;
+    --blue-light: #BFDBFE;
+    --blue-pale: #EFF6FF;
+    --blue-bg: #F8FAFF;
+    --navy: #1E3A5F;
+    --steel: #4A6FA5;
+    --slate: #64748B;
+    --cream: #F8FAFC;
+    --text: #1E293B;
+    --text-light: #475569;
+    --green-soft: #16A34A;
+    --red-soft: #DC2626;
+    --gold: #B8860B;
+    --teal: #0D9488;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+    background: var(--blue-bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    padding-bottom: 60px;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, var(--blue-dark), var(--blue-mid));
+    color: white;
+    text-align: center;
+    padding: 40px 20px 30px;
+  }
+  .header-label {
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    opacity: 0.8;
+    margin-bottom: 16px;
+  }
+  .header h1 {
+    font-size: 32px;
+    font-weight: 300;
+    margin-bottom: 4px;
+  }
+  .header h2 {
+    font-size: 20px;
+    font-weight: 300;
+    color: var(--blue-light);
+    font-style: italic;
+  }
+  .header .dedication {
+    margin-top: 16px;
+    font-style: italic;
+    font-size: 14px;
+    opacity: 0.85;
+  }
+  .header .disclaimer {
+    margin-top: 20px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  /* NAV */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: white;
+    border-bottom: 2px solid var(--blue-light);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+    padding: 0 12px;
+    box-shadow: 0 2px 8px rgba(26,58,92,0.08);
+  }
+  .nav a {
+    display: inline-block;
+    padding: 12px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-light);
+    text-decoration: none;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+  }
+  .nav a:hover, .nav a:active {
+    color: var(--blue-mid);
+    border-bottom-color: var(--blue-mid);
+  }
+
+  /* SECTIONS */
+  .section {
+    padding: 28px 16px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .section + .section {
+    border-top: 1px solid var(--blue-light);
+  }
+  .section-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--blue-dark);
+    margin-bottom: 4px;
+  }
+  .section-subtitle {
+    font-size: 13px;
+    color: var(--steel);
+    font-style: italic;
+    margin-bottom: 20px;
+  }
+
+  /* DIVIDER */
+  .divider {
+    text-align: center;
+    margin: 16px 0;
+  }
+  .divider::after {
+    content: '◆';
+    color: var(--steel);
+    font-size: 10px;
+  }
+
+  /* CARDS */
+  .card-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  @media (min-width: 600px) {
+    .card-row { grid-template-columns: 1fr 1fr 1fr; }
+  }
+  .card {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    border-left: 4px solid var(--blue-soft);
+    box-shadow: 0 2px 8px rgba(26,58,92,0.06);
+  }
+  .card p {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* FOOD TABLE */
+  .food-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(26,58,92,0.08);
+    margin-bottom: 12px;
+  }
+  .food-table th {
+    padding: 14px 16px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-align: left;
+  }
+  .food-table th.yes {
+    background: var(--blue-mid);
+    color: white;
+  }
+  .food-table th.no {
+    background: var(--navy);
+    color: white;
+  }
+  .food-table td {
+    padding: 11px 16px;
+    font-size: 14px;
+    border-bottom: 1px solid #dbeafe;
+    background: white;
+  }
+  .food-table tr:last-child td { border-bottom: none; }
+  .food-note {
+    background: var(--blue-pale);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--text-light);
+    line-height: 1.6;
+  }
+
+  /* GI BADGE */
+  .gi-low {
+    display: inline-block; background: #dcfce7; color: #166534;
+    font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px;
+  }
+  .gi-mid {
+    display: inline-block; background: #fef9c3; color: #854d0e;
+    font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px;
+  }
+  .gi-high {
+    display: inline-block; background: #fee2e2; color: #991b1b;
+    font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px;
+  }
+
+  /* MEAL PLAN */
+  .meal-plan {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 12px;
+  }
+  .meal-table {
+    min-width: 700px;
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(26,58,92,0.08);
+    font-size: 13px;
+  }
+  .meal-table thead th {
+    background: var(--blue-mid);
+    color: white;
+    padding: 12px 10px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+  }
+  .meal-table thead th:first-child {
+    background: var(--blue-dark);
+  }
+  .meal-table tbody td {
+    padding: 10px;
+    border-bottom: 1px solid #dbeafe;
+    background: white;
+    vertical-align: top;
+    text-align: center;
+    line-height: 1.5;
+  }
+  .meal-table tbody td:first-child {
+    background: var(--blue-pale);
+    font-weight: 700;
+    font-size: 12px;
+    text-align: center;
+    color: var(--blue-dark);
+    white-space: nowrap;
+  }
+  .meal-table tbody td:first-child small {
+    display: block;
+    font-weight: 400;
+    color: var(--steel);
+    font-size: 11px;
+  }
+
+  /* ALTERNATIVES */
+  .alt-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(26,58,92,0.08);
+    margin-bottom: 12px;
+  }
+  .alt-table thead th {
+    background: var(--blue-mid);
+    color: white;
+    padding: 12px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: left;
+  }
+  .alt-table tbody td {
+    padding: 12px 14px;
+    font-size: 13px;
+    border-bottom: 1px solid #dbeafe;
+    background: white;
+    vertical-align: top;
+    line-height: 1.7;
+  }
+  .alt-table tbody td:first-child {
+    background: var(--blue-pale);
+    font-weight: 700;
+    font-size: 12px;
+    color: var(--blue-dark);
+    white-space: nowrap;
+    text-align: center;
+    width: 100px;
+  }
+  .alt-table tbody td:first-child small {
+    display: block;
+    font-weight: 400;
+    color: var(--steel);
+    font-size: 11px;
+  }
+
+  /* REMINDER */
+  .reminder {
+    background: linear-gradient(135deg, var(--blue-pale), #dbeafe);
+    border-left: 4px solid var(--blue-mid);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--text);
+    margin-top: 12px;
+  }
+
+  /* MISTAKES */
+  .mistake-card {
+    background: white;
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 14px;
+    box-shadow: 0 2px 8px rgba(26,58,92,0.06);
+    border-left: 4px solid var(--steel);
+  }
+  .mistake-card .mistake-icon {
+    font-size: 22px;
+    margin-bottom: 6px;
+  }
+  .mistake-card h3 {
+    font-size: 16px;
+    color: var(--blue-dark);
+    margin-bottom: 6px;
+  }
+  .mistake-card p {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--text);
+  }
+  .mistake-card .tip {
+    margin-top: 10px;
+    background: var(--blue-pale);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--blue-dark);
+    font-weight: 500;
+  }
+
+  /* HEALTH GRID */
+  .health-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  @media (min-width: 600px) {
+    .health-grid { grid-template-columns: 1fr 1fr; }
+  }
+  .health-card {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(26,58,92,0.06);
+  }
+  .health-card h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--blue-dark);
+    margin-bottom: 6px;
+  }
+  .health-card p {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* BOTTOM BOXES */
+  .bottom-boxes {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 20px;
+  }
+  @media (min-width: 600px) {
+    .bottom-boxes { grid-template-columns: 1fr 1fr 1fr; }
+  }
+  .bottom-box {
+    background: linear-gradient(135deg, var(--blue-mid), var(--blue-dark));
+    color: white;
+    border-radius: 12px;
+    padding: 18px;
+    text-align: center;
+  }
+  .bottom-box h4 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+  }
+  .bottom-box p {
+    font-size: 13px;
+    line-height: 1.6;
+    opacity: 0.92;
+  }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    padding: 40px 20px;
+    background: var(--blue-pale);
+    margin-top: 20px;
+  }
+  .footer h3 {
+    font-size: 24px;
+    color: var(--blue-dark);
+    font-weight: 400;
+    margin-bottom: 8px;
+  }
+  .footer p {
+    font-size: 14px;
+    color: var(--steel);
+    font-style: italic;
+  }
+
+  ul.food-list { list-style: none; padding: 0; }
+  ul.food-list li { padding: 2px 0; }
+  ul.food-list li::before { content: '• '; color: var(--blue-mid); }
+
+  .swipe-hint {
+    text-align: center;
+    font-size: 12px;
+    color: var(--steel);
+    margin-bottom: 8px;
+  }
+
+  /* CROSS NAV */
+  .cross-nav {
+    background: var(--blue-dark);
+    padding: 10px 16px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .cross-nav a {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .cross-nav a.pink { background: rgba(194,24,91,0.2); color: #F8BBD0; border: 1px solid rgba(194,24,91,0.4); }
+  .cross-nav a.pink:hover { background: rgba(194,24,91,0.4); }
+  .cross-nav a.green { background: rgba(13,148,136,0.2); color: #99F6E4; border: 1px solid rgba(13,148,136,0.4); }
+  .cross-nav a.green:hover { background: rgba(13,148,136,0.4); }
+  .cross-nav a.blue { background: rgba(255,255,255,0.2); color: var(--blue-light); border: 1px solid rgba(255,255,255,0.3); }
+  .cross-nav a.blue.active { background: rgba(255,255,255,0.3); color: white; }
+</style>
+</head>
+<body>
+
+<!-- CROSS NAV -->
+<div class="cross-nav">
+  <a href="Tiroid_Dostu_Diyet_Programi.html" class="pink">🩷 Annemin Rehberi</a>
+  <a href="Aile_Ortak_Beslenme_Rehberi.html" class="green">💚 Aile Ortak</a>
+  <a href="Diyabet_Dostu_Diyet_Programi.html" class="blue active">💙 Babamın Rehberi</a>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-label">Sağlıklı Yaşam Rehberi</div>
+  <h1>Diyabet Dostu</h1>
+  <h2>Diyet Programı</h2>
+  <p class="dedication">Sevgili Babam İçin Özenle Hazırlandı</p>
+  <div class="disclaimer"><strong>Önemli Not:</strong> Bu program genel bir rehberdir. Tip 2 diyabet ilaçlarınız varsa mutlaka doktorunuz ve diyetisyeninizle görüşün.</div>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <a href="#ilkeler">İlkeler</a>
+  <a href="#besinler">Besinler</a>
+  <a href="#plan">Öğün Planı</a>
+  <a href="#alternatif">Alternatifler</a>
+  <a href="#hatalar">Sık Hatalar</a>
+  <a href="#saglik">Sağlık</a>
+</div>
+
+<!-- 1. TEMEL BESLENME İLKELERİ -->
+<div class="section" id="ilkeler">
+  <div class="section-title">Temel Beslenme İlkeleri</div>
+  <div class="section-subtitle">Kan şekerini dengede tutan günlük rutin</div>
+  <div class="divider"></div>
+  <div class="card-row">
+    <div class="card">
+      <p><strong>Öğün düzeni:</strong> Günde 3 ana öğün + 2 ara öğün, sabit saatlerde. Öğün atlamak kan şekerinde sert düşüş ve ardından aşırı yükselişe neden olur. Asla öğün atlama.</p>
+    </div>
+    <div class="card">
+      <p><strong>Glisemik indeks:</strong> Düşük GI'li besinleri tercih et. Beyaz ekmek, beyaz pirinç ve patates yerine tam tahıl, bulgur ve baklagil. Lifli besinler şekerin yavaş yükselmesini sağlar.</p>
+    </div>
+    <div class="card">
+      <p><strong>İlaç ve su:</strong> Metformin yemekle birlikte alınmalı (mide rahatsızlığını önler). Günde en az 2-2.5 litre su. 30 dakika yürüyüş kan şekerini düşürür.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 2. NE YEMELİ / NE YEMEMELİ -->
+<div class="section" id="besinler">
+  <div class="section-title">Ne Yemeli — Ne Yememeli?</div>
+  <div class="section-subtitle">Kan şekerini dengede tutan besin rehberi</div>
+  <div class="divider"></div>
+
+  <table class="food-table" style="margin-bottom: 16px;">
+    <thead><tr><th class="yes">✓ YENİLECEKLER</th></tr></thead>
+    <tbody>
+      <tr><td>Yumurta, tavuk, hindi, balık (somon, sardalye) — protein kan şekerini dengeliyor <span class="gi-low">Düşük Gİ</span></td></tr>
+      <tr><td>Mercimek, nohut, kuru fasulye — lif deposu, şekeri yavaş yükseltiyor <span class="gi-low">Düşük Gİ</span></td></tr>
+      <tr><td>Yoğurt, lor peyniri, kefir (şekersiz) — probiyotik + protein</td></tr>
+      <tr><td>Tam tahıllı ekmek (az miktarda), bulgur, yulaf, kinoa <span class="gi-low">Düşük Gİ</span></td></tr>
+      <tr><td>Yeşil yapraklı sebzeler — ıspanak, roka, marul, brokoli, kabak</td></tr>
+      <tr><td>Avokado, zeytinyağı, ceviz, badem — sağlıklı yağlar</td></tr>
+      <tr><td>Elma, armut, çilek, yaban mersini — düşük şekerli meyveler <span class="gi-low">Düşük Gİ</span></td></tr>
+      <tr><td>Tarçın — insülin duyarlılığını artırabilir (yemeklere ekleyin)</td></tr>
+    </tbody>
+  </table>
+
+  <table class="food-table">
+    <thead><tr><th class="no">✗ KAÇINILACAKLAR</th></tr></thead>
+    <tbody>
+      <tr><td>Beyaz ekmek, beyaz pirinç, beyaz makarna — kan şekerini hızla fırlatır <span class="gi-high">Yüksek Gİ</span></td></tr>
+      <tr><td>Şekerli içecekler — meyve suyu, kola, şekerli çay <span class="gi-high">Yüksek Gİ</span></td></tr>
+      <tr><td>Tatlılar — baklava, künefe, sütlü tatlılar, kurabiye</td></tr>
+      <tr><td>Patates kızartması, cips, hazır atıştırmalıklar <span class="gi-high">Yüksek Gİ</span></td></tr>
+      <tr><td>Bal, reçel, pekmez — doğal ama yine şeker <span class="gi-high">Yüksek Gİ</span></td></tr>
+      <tr><td>İşlenmiş et — salam, sosis, sucuk (tuz + yağ)</td></tr>
+      <tr><td>Alkol — kan şekerini öngörülemez şekilde etkiler</td></tr>
+      <tr><td>Karpuz, kavun, üzüm, muz (aşırı tüketim) <span class="gi-high">Yüksek Gİ</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="food-note">
+    <strong>Glisemik İndeks nedir?</strong> Besinlerin kan şekerini ne kadar hızlı yükselttiğini gösteren bir ölçüdür. <span class="gi-low">Düşük Gİ</span> = yavaş yükseliş (iyi), <span class="gi-high">Yüksek Gİ</span> = hızlı yükseliş (kötü). Her öğünde düşük Gİ'li bir besin bulundurun.
+  </div>
+</div>
+
+<!-- 3. HAFTALIK ÖĞÜN PLANI -->
+<div class="section" id="plan">
+  <div class="section-title">Haftalık Öğün Planı</div>
+  <div class="section-subtitle">Pazartesi'den Cuma'ya, kan şekerini dengede tutan öğünler</div>
+  <div class="divider"></div>
+  <p class="swipe-hint">← Tabloyu yana kaydırın →</p>
+  <div class="meal-plan">
+    <table class="meal-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Pazartesi</th>
+          <th>Salı</th>
+          <th>Çarşamba</th>
+          <th>Perşembe</th>
+          <th>Cuma</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>KAHVALTI</strong><small>07:00</small></td>
+          <td>2 haşlanmış yumurta, 1 dilim tam tahıllı ekmek, domates salatalık, 5 zeytin</td>
+          <td>Yulaf ezmesi (50g) süt ile, tarçın, 5-6 badem, çilek</td>
+          <td>Menemen (2 yumurta, domates, biber), 1 dilim çavdar ekmek</td>
+          <td>Lor peyniri (100g), ceviz, 1 dilim tam buğday ekmek, domates</td>
+          <td>Omlet (2 yumurta, ıspanak, mantar), zeytin, salatalık</td>
+        </tr>
+        <tr>
+          <td><strong>ARA ÖĞÜN</strong><small>10:00</small></td>
+          <td>1 avuç badem + 1 elma</td>
+          <td>Yoğurt (150g) + tarçın + ceviz</td>
+          <td>Havuç-salatalık çubuğu + 2 yemek kaşığı humus</td>
+          <td>1 armut + 10 badem</td>
+          <td>Kefir (200ml) + 1 yemek kaşığı keten tohumu</td>
+        </tr>
+        <tr>
+          <td><strong>ÖĞLE</strong><small>12:30</small></td>
+          <td>Izgara tavuk (150g), bulgur pilavı (4 kaşık), bol yeşil salata zeytinyağı-limon</td>
+          <td>Fırın somon (150g), buharda brokoli, 3 kaşık kinoa</td>
+          <td>Mercimek çorbası, ton balıklı salata (roka, domates, limon)</td>
+          <td>Izgara köfte (120g), karışık salata, 3 kaşık bulgur</td>
+          <td>Tavuk sote (mantar, biber, kabak), 3 kaşık esmer pirinç</td>
+        </tr>
+        <tr>
+          <td><strong>İKİNDİ</strong><small>15:30</small></td>
+          <td>Lor peyniri (80g) + ceviz + tarçın</td>
+          <td>1 dilim tam tahıl ekmek + avokado</td>
+          <td>Yeşil çay + 2-3 kare bitter çikolata (%70+)</td>
+          <td>Yoğurt (150g) + yaban mersini</td>
+          <td>1 elma + 1 yemek kaşığı fıstık ezmesi</td>
+        </tr>
+        <tr>
+          <td><strong>AKŞAM</strong><small>19:00</small></td>
+          <td>Nohut yemeği (zeytinyağlı), cacık, 1 dilim tam tahıl ekmek</td>
+          <td>Fırın balık (levrek), zeytinyağlı enginar, salata</td>
+          <td>Tavuk çorbası, zeytinyağlı yeşil fasulye, yoğurt</td>
+          <td>Kuru fasulye (az pirinçli), salata, ayran</td>
+          <td>Sebzeli mercimek köftesi, çoban salata, cacık</td>
+        </tr>
+        <tr>
+          <td><strong>GECE</strong><small>21:00</small></td>
+          <td>10 badem + ıhlamur</td>
+          <td>Yoğurt (100g) + tarçın</td>
+          <td>1 avuç ceviz + zencefil çayı</td>
+          <td>Lor peyniri (50g) + 5 badem</td>
+          <td>Kefir (150ml)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="reminder">
+    <strong>Hatırlatıcı:</strong> Her gün 2-2.5 L su • Metformin yemekle birlikte al • Ekmek günde max 2 dilim (tam tahıl) • Yemekten sonra 15 dk yürüyüş kan şekerini düşürür • Gece atıştırmalığını atlama — sabaha kadar şeker düşmesini önler
+  </div>
+</div>
+
+<!-- 4. ALTERNATİFLER -->
+<div class="section" id="alternatif">
+  <div class="section-title">Öğünleri Çeşitlendirin</div>
+  <div class="section-subtitle">Aynı yemeklerden sıkılmamak için düşük Gİ alternatifler</div>
+  <div class="divider"></div>
+  <table class="alt-table">
+    <thead>
+      <tr>
+        <th>Öğün</th>
+        <th>Mevcut Seçenekler</th>
+        <th>Çeşitlendirme Önerileri</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>KAHVALTI</strong><small>07:00</small></td>
+        <td>
+          <ul class="food-list">
+            <li>Haşlanmış / omlet yumurta</li>
+            <li>Yulaf ezmesi + meyve</li>
+            <li>Menemen</li>
+            <li>Lor peyniri + ekmek</li>
+          </ul>
+        </td>
+        <td>
+          <ul class="food-list">
+            <li>Karabuğday krep + lor + tarçın</li>
+            <li>Avokado ekmek + yumurta + roka</li>
+            <li>Chia pudingi (gece hazırlanan) + çilek</li>
+            <li>Sebzeli gözleme (tam buğday hamuru)</li>
+            <li>Peynirli ıspanaklı börek (fırında, yufkasız)</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td><strong>ARA ÖĞÜN</strong><small>10:00</small></td>
+        <td>
+          <ul class="food-list">
+            <li>Badem + elma</li>
+            <li>Yoğurt + ceviz</li>
+            <li>Humus + sebze çubuğu</li>
+            <li>Armut + badem</li>
+          </ul>
+        </td>
+        <td>
+          <ul class="food-list">
+            <li>Avokado yarım + limon tuz</li>
+            <li>Keçi peyniri + ceviz + 2 kuru kayısı</li>
+            <li>Şekersiz fıstık ezmeli kereviz çubuğu</li>
+            <li>Kabak çekirdeği + kuru yaban mersini (1 avuç)</li>
+            <li>Tahin + elma dilimleri</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td><strong>ÖĞLE</strong><small>12:30</small></td>
+        <td>
+          <ul class="food-list">
+            <li>Izgara tavuk + bulgur</li>
+            <li>Fırın somon + brokoli</li>
+            <li>Mercimek çorbası + salata</li>
+            <li>Izgara köfte + salata</li>
+          </ul>
+        </td>
+        <td>
+          <ul class="food-list">
+            <li>Nohut köfte + bulgur + cacık</li>
+            <li>Sardalye + roka salatası + kinoa</li>
+            <li>Tavuk şiş + közlenmiş sebze</li>
+            <li>Karnabahar pilavı + ızgara balık</li>
+            <li>Zeytinyağlı barbunya + lor + salata</li>
+            <li>Mantar sote + ızgara tavuk + yeşillik</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td><strong>İKİNDİ</strong><small>15:30</small></td>
+        <td>
+          <ul class="food-list">
+            <li>Lor + ceviz + tarçın</li>
+            <li>Avokado ekmek</li>
+            <li>Bitter çikolata</li>
+            <li>Yoğurt + meyve</li>
+          </ul>
+        </td>
+        <td>
+          <ul class="food-list">
+            <li>Haydari (yoğurt + sarımsak + nane)</li>
+            <li>Smoothie (ıspanak + avokado + badem sütü)</li>
+            <li>Ricotta + tarçın + ceviz</li>
+            <li>Yeşil çay + 5-6 fındık</li>
+            <li>Labne + zeytinyağı + tam tahıl kraker</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td><strong>AKŞAM</strong><small>19:00</small></td>
+        <td>
+          <ul class="food-list">
+            <li>Nohut yemeği + cacık</li>
+            <li>Fırın balık + sebze</li>
+            <li>Tavuk çorbası + fasulye</li>
+            <li>Kuru fasulye + salata</li>
+          </ul>
+        </td>
+        <td>
+          <ul class="food-list">
+            <li>Sebzeli güveç (kabak, patlıcan, domates)</li>
+            <li>Ispanak yemeği + yoğurt + 1 dilim ekmek</li>
+            <li>Fırında sebzeli tavuk baget</li>
+            <li>Karışık sebze çorbası + lor ekmek üstü</li>
+            <li>Patlıcan musakka (kıymalı, pirinçsiz)</li>
+            <li>Zeytinyağlı enginar + balık</li>
+          </ul>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="reminder">
+    <strong>İpucu:</strong> Pirinç yerine bulgur veya karnabahar pilavı deneyin • Her öğünde mutlaka protein olsun • Sebzeleri zeytinyağıyla pişirin — sağlıklı yağ tokluk süresini uzatır • Yeni tarifler denemek diyetten sıkılmayı önler
+  </div>
+</div>
+
+<!-- 5. SIK YAPILAN HATALAR -->
+<div class="section" id="hatalar">
+  <div class="section-title">Sık Yapılan Hatalar</div>
+  <div class="section-subtitle">Tip 2 diyabette kan şekerini kontrolden çıkaran yaygın yanlışlar</div>
+  <div class="divider"></div>
+
+  <div class="mistake-card">
+    <div class="mistake-icon">🍞</div>
+    <h3>Ekmek ve Pilav Aşırı Tüketimi</h3>
+    <p>Beyaz ekmek ve beyaz pirinç, kan şekerini neredeyse şeker kadar hızlı yükseltir. Bir porsiyon beyaz pirinç, yaklaşık 10-12 küp şekere eşdeğer glisemik yüke sahiptir. "Tatlı yemiyorum ki" demek yeterli değildir — beyaz karbonhidratlar gizli şeker kaynağıdır.</p>
+    <div class="tip">✓ Doğrusu: Beyaz ekmek yerine tam tahıl veya çavdar ekmeği (günde max 2 dilim). Beyaz pirinç yerine bulgur, kinoa veya karnabahar pilavı. Makarna yerine tam buğday makarna, yarım porsiyon.</div>
+  </div>
+
+  <div class="mistake-card">
+    <div class="mistake-icon">🍮</div>
+    <h3>Tatlı İsteğine Teslim Olmak</h3>
+    <p>Tip 2 diyabette tatlı isteği biyolojiktir — insülin direnci beyne "şeker lazım" sinyali gönderir. Baklava, künefe gibi tatlılar kan şekerini 300+ mg/dL'ye fırlatabilir. Ama tatlıyı tamamen yasaklamak da sürdürülemez ve tıkınma riskini artırır.</p>
+    <div class="tip">✓ Doğrusu: Bitter çikolata (%70+, 2-3 kare), tarçınlı yoğurt, çilekli chia pudingi, badem + hurma (1 adet) gibi düşük şekerli alternatifler deneyin. Tatlı isteği geldiğinde 5 dakika bekleyin ve bir bardak su için — çoğu zaman geçer.</div>
+  </div>
+
+  <div class="mistake-card">
+    <div class="mistake-icon">⏰</div>
+    <h3>Düzensiz ve Geç Saatlerde Yemek</h3>
+    <p>Öğün atlamak veya saatleri sürekli değiştirmek kan şekerinde "roller coaster" etkisi yaratır — sert düşüş, ardından aşırı yükseliş. Gece geç saatte ağır yemek yemek ise sabah açlık şekerinin yüksek çıkmasına neden olur (şafak fenomeni).</p>
+    <div class="tip">✓ Doğrusu: Her gün aynı saatlerde yiyin. Kahvaltı 07:00, öğle 12:30, akşam 19:00. Ara öğünleri atlama. Akşam yemeğini 20:00'den önce bitirin. Düzen, ilacın etkisini de artırır.</div>
+  </div>
+
+  <div class="mistake-card">
+    <div class="mistake-icon">💊</div>
+    <h3>Metformin'i Yanlış Zamanda veya Aç Karnına Almak</h3>
+    <p>Metformin aç karnına alındığında mide bulantısı, şişkinlik ve ishal yapabilir. Bu yan etkiler yüzünden birçok kişi ilacı bırakır veya düzensiz kullanır. Oysa doğru zamanlama ile yan etkiler minimuma iner.</p>
+    <div class="tip">✓ Doğrusu: Metformin'i yemek sırasında veya yemekten hemen sonra alın. Her gün aynı saatte alın. İlacı asla kendi başınıza kesmeyin — doktorunuzla konuşun.</div>
+  </div>
+
+  <div class="mistake-card">
+    <div class="mistake-icon">🥤</div>
+    <h3>"Doğal" Diye Meyve Suyu ve Bal Tüketmek</h3>
+    <p>"Şeker yerine bal koyuyorum" veya "taze sıkılmış portakal suyu içiyorum" diyabet yönetiminde en sık yapılan hatalardan biridir. Bal, reçel ve meyve suları kan şekerini beyaz şeker kadar hızlı yükseltir. Meyvenin kendisi iyidir çünkü lif içerir — suyu değil.</p>
+    <div class="tip">✓ Doğrusu: Meyve suyunu bırakın, meyvenin kendisini yiyin (günde 2-3 porsiyon, düşük Gİ olanlar). Bal ve reçeli tamamen kesin. Çayı şekersiz veya tarçınla için.</div>
+  </div>
+
+  <div class="mistake-card">
+    <div class="mistake-icon">🛋️</div>
+    <h3>Yemekten Sonra Hareketsiz Kalmak</h3>
+    <p>Yemekten sonra koltuğa veya yatağa uzanmak, kan şekerinin en yüksek olduğu anda vücudun onu kullanmasını engeller. Yemek sonrası 1-2 saatlik süre, şekerin zirve yaptığı ve egzersizin en çok işe yaradığı zamandır.</p>
+    <div class="tip">✓ Doğrusu: Yemekten 15-30 dakika sonra 15 dakikalık kısa bir yürüyüş yapın. Bu basit alışkanlık tokluk şekerini %30'a kadar düşürebilir. Ağır spor şart değil — tempolu yürüyüş yeterli.</div>
+  </div>
+
+  <div class="mistake-card">
+    <div class="mistake-icon">🔬</div>
+    <h3>HbA1c ve Şeker Takibini İhmal Etmek</h3>
+    <p>"Kendimi iyi hissediyorum" diyabet takibi için yeterli değildir. Kan şekeri yüksekken vücut buna alışır ve belirti vermez. Uzun süreli yüksek şeker göz, böbrek, sinir ve damar hasarına sessizce yol açar.</p>
+    <div class="tip">✓ Doğrusu: HbA1c testi her 3 ayda bir yapılmalı (hedef: %7 altı). Evde şeker ölçümü: sabah aç karnına + yemekten 2 saat sonra. Aç kan şekeri hedefi: 80-130 mg/dL. Tokluk hedefi: 180 mg/dL altı.</div>
+  </div>
+
+  <div class="mistake-card">
+    <div class="mistake-icon">💧</div>
+    <h3>Yetersiz Su İçmek</h3>
+    <p>Yüksek kan şekeri böbreklerin fazla çalışmasına ve sıvı kaybına neden olur. Dehidrasyon kan şekerini daha da yükseltir — bir kısır döngü oluşur. Çay, kahve ve ayran su yerine geçmez.</p>
+    <div class="tip">✓ Doğrusu: Günde en az 2-2.5 litre sade su için. Sabah kalkar kalkmaz 1 bardak ılık su. Her öğünden önce 1 bardak su. Su içmeyi unutuyorsanız telefona hatırlatıcı kurun.</div>
+  </div>
+</div>
+
+<!-- 6. GENEL SAĞLIK ÖNERİLERİ -->
+<div class="section" id="saglik">
+  <div class="section-title">Genel Sağlık Önerileri</div>
+  <div class="section-subtitle">Tip 2 diyabetle sağlıklı yaşamı destekleyen alışkanlıklar</div>
+  <div class="divider"></div>
+
+  <div class="health-grid">
+    <div class="health-card">
+      <h4>🩸 Kan Takibi</h4>
+      <p>HbA1c her 3 ayda bir, açlık ve tokluk şekeri düzenli ölçülmeli. Böbrek fonksiyonları (kreatinin, GFR) yılda bir kontrol.</p>
+    </div>
+    <div class="health-card">
+      <h4>👁️ Göz Kontrolü</h4>
+      <p>Diyabetik retinopati sessiz ilerler. Yılda bir göz dibi muayenesi yaptırın — erken teşhis görme kaybını önler.</p>
+    </div>
+    <div class="health-card">
+      <h4>🚶 Hareket</h4>
+      <p>Günde 30 dakika tempolu yürüyüş insülin duyarlılığını artırır. Yemekten sonra 15 dk kısa yürüyüş tokluk şekerini düşürür.</p>
+    </div>
+    <div class="health-card">
+      <h4>🦶 Ayak Bakımı</h4>
+      <p>Diyabet ayak sinirlerini etkiler. Her gün ayaklarınızı kontrol edin, rahat ayakkabı giyin, çıplak ayakla yürümeyin.</p>
+    </div>
+    <div class="health-card">
+      <h4>😴 Uyku</h4>
+      <p>Yetersiz uyku insülin direncini artırır ve tatlı isteğini tetikler. Her gece 7-8 saat düzenli uyku hedefleyin.</p>
+    </div>
+    <div class="health-card">
+      <h4>🧘 Stres Yönetimi</h4>
+      <p>Stres kortizol yükseltir, kortizol kan şekerini yükseltir. Günlük nefes egzersizleri ve sakin aktiviteler faydalıdır.</p>
+    </div>
+  </div>
+
+  <div class="bottom-boxes">
+    <div class="bottom-box">
+      <h4>💊 İlaç Zamanlaması</h4>
+      <p>Metformin yemekle birlikte veya hemen sonra alınmalı. Her gün aynı saatlerde. İlacı asla kendi başınıza kesmeyin — doktorunuzla konuşun.</p>
+    </div>
+    <div class="bottom-box">
+      <h4>🎯 Günlük Hedefler</h4>
+      <p>2-2.5 litre su · 30 dakika yürüyüş · 3 ana + 2 ara öğün · Max 2 dilim tam tahıl ekmek · Şekerli içecek yok · 7-8 saat uyku</p>
+    </div>
+    <div class="bottom-box">
+      <h4>📋 Düzenli Kontrol</h4>
+      <p>HbA1c — her 3 ayda bir · Açlık şekeri hedef: 80-130 · Göz dibi — yılda bir · Böbrek + kolesterol — yılda bir · Ayak muayenesi</p>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <h3>Sağlıklı günler dileriz.</h3>
+  <p>Bu program sevgiyle hazırlanmıştır.</p>
+</div>
+
+</body>
+</html>

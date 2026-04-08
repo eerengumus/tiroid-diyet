@@ -422,9 +422,42 @@
     color: var(--rose-gold);
     margin-bottom: 8px;
   }
+
+  /* CROSS NAV */
+  .cross-nav {
+    background: var(--pink-dark);
+    padding: 10px 16px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .cross-nav a {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .cross-nav a.pink { background: rgba(255,255,255,0.2); color: var(--pink-light); border: 1px solid rgba(255,255,255,0.3); }
+  .cross-nav a.pink.active { background: rgba(255,255,255,0.3); color: white; }
+  .cross-nav a.green { background: rgba(13,148,136,0.2); color: #99F6E4; border: 1px solid rgba(13,148,136,0.4); }
+  .cross-nav a.green:hover { background: rgba(13,148,136,0.4); }
+  .cross-nav a.blue { background: rgba(37,99,235,0.2); color: #BFDBFE; border: 1px solid rgba(37,99,235,0.4); }
+  .cross-nav a.blue:hover { background: rgba(37,99,235,0.4); }
 </style>
 </head>
 <body>
+
+<!-- CROSS NAV -->
+<div class="cross-nav">
+  <a href="Tiroid_Dostu_Diyet_Programi.html" class="pink active">🩷 Annemin Rehberi</a>
+  <a href="Aile_Ortak_Beslenme_Rehberi.html" class="green">💚 Aile Ortak</a>
+  <a href="Diyabet_Dostu_Diyet_Programi.html" class="blue">💙 Babamın Rehberi</a>
+</div>
 
 <!-- HEADER -->
 <div class="header">

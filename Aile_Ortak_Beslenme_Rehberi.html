@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Aile Diyet">
+<title>Aile Ortak Beslenme Rehberi</title>
+<style>
+  :root {
+    --teal-dark: #134E4A;
+    --teal-mid: #0D9488;
+    --teal-soft: #14B8A6;
+    --teal-light: #99F6E4;
+    --teal-pale: #F0FDFA;
+    --teal-bg: #F8FFFE;
+    --forest: #1A5C4A;
+    --sage: #5B8A72;
+    --olive: #6B8F71;
+    --text: #1A2E2A;
+    --text-light: #3D5A52;
+    --warm: #92400E;
+    --pink-accent: #C2185B;
+    --blue-accent: #2563EB;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+    background: var(--teal-bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    padding-bottom: 60px;
+  }
+
+  .header {
+    background: linear-gradient(135deg, var(--teal-dark), var(--teal-mid));
+    color: white;
+    text-align: center;
+    padding: 40px 20px 30px;
+  }
+  .header-label {
+    font-size: 11px; letter-spacing: 4px; text-transform: uppercase; opacity: 0.8; margin-bottom: 16px;
+  }
+  .header h1 { font-size: 32px; font-weight: 300; margin-bottom: 4px; }
+  .header h2 { font-size: 20px; font-weight: 300; color: var(--teal-light); font-style: italic; }
+  .header .dedication { margin-top: 16px; font-style: italic; font-size: 14px; opacity: 0.85; }
+  .header .disclaimer {
+    margin-top: 20px; background: rgba(255,255,255,0.15); border-radius: 10px;
+    padding: 12px 16px; font-size: 13px; line-height: 1.5;
+  }
+
+  /* CROSS NAV */
+  .cross-nav {
+    background: var(--teal-dark);
+    padding: 10px 16px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .cross-nav a {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .cross-nav a.pink { background: rgba(194,24,91,0.2); color: #F8BBD0; border: 1px solid rgba(194,24,91,0.4); }
+  .cross-nav a.pink:hover { background: rgba(194,24,91,0.4); }
+  .cross-nav a.blue { background: rgba(37,99,235,0.2); color: #BFDBFE; border: 1px solid rgba(37,99,235,0.4); }
+  .cross-nav a.blue:hover { background: rgba(37,99,235,0.4); }
+  .cross-nav a.green { background: rgba(255,255,255,0.15); color: var(--teal-light); border: 1px solid rgba(255,255,255,0.3); }
+  .cross-nav a.green.active { background: rgba(255,255,255,0.25); color: white; }
+
+  .nav {
+    position: sticky; top: 0; z-index: 100; background: white;
+    border-bottom: 2px solid var(--teal-light); overflow-x: auto;
+    -webkit-overflow-scrolling: touch; white-space: nowrap; padding: 0 12px;
+    box-shadow: 0 2px 8px rgba(19,78,74,0.08);
+  }
+  .nav a {
+    display: inline-block; padding: 12px 14px; font-size: 13px; font-weight: 600;
+    color: var(--text-light); text-decoration: none; border-bottom: 3px solid transparent; transition: all 0.2s;
+  }
+  .nav a:hover, .nav a:active { color: var(--teal-mid); border-bottom-color: var(--teal-mid); }
+
+  .section { padding: 28px 16px; max-width: 800px; margin: 0 auto; }
+  .section + .section { border-top: 1px solid #ccfbf1; }
+  .section-title { font-size: 22px; font-weight: 700; color: var(--teal-dark); margin-bottom: 4px; }
+  .section-subtitle { font-size: 13px; color: var(--sage); font-style: italic; margin-bottom: 20px; }
+  .divider { text-align: center; margin: 16px 0; }
+  .divider::after { content: '◆'; color: var(--sage); font-size: 10px; }
+
+  .card-row { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 16px; }
+  @media (min-width: 600px) { .card-row { grid-template-columns: 1fr 1fr; } .card-row.three { grid-template-columns: 1fr 1fr 1fr; } }
+  .card {
+    background: white; border-radius: 12px; padding: 16px; border-left: 4px solid var(--teal-soft);
+    box-shadow: 0 2px 8px rgba(19,78,74,0.06);
+  }
+  .card.thyroid { border-left-color: var(--pink-accent); }
+  .card.diabetes { border-left-color: var(--blue-accent); }
+  .card p { font-size: 14px; line-height: 1.6; }
+  .card .tag {
+    display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px;
+    border-radius: 10px; margin-bottom: 6px;
+  }
+  .card .tag.t { background: #fce4ec; color: #880e4f; }
+  .card .tag.d { background: #e3f2fd; color: #1565c0; }
+  .card .tag.both { background: #e0f2f1; color: #00695c; }
+
+  .food-table {
+    width: 100%; border-collapse: collapse; border-radius: 12px; overflow: hidden;
+    box-shadow: 0 2px 12px rgba(19,78,74,0.08); margin-bottom: 12px;
+  }
+  .food-table th {
+    padding: 14px 16px; font-size: 14px; font-weight: 700; letter-spacing: 1px; text-align: left;
+  }
+  .food-table th.yes { background: var(--teal-mid); color: white; }
+  .food-table th.no { background: var(--teal-dark); color: white; }
+  .food-table td {
+    padding: 11px 16px; font-size: 14px; border-bottom: 1px solid #ccfbf1; background: white;
+  }
+  .food-table tr:last-child td { border-bottom: none; }
+  .food-note {
+    background: var(--teal-pale); border-radius: 10px; padding: 12px 16px;
+    font-size: 13px; color: var(--text-light); line-height: 1.6;
+  }
+
+  .meal-plan { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 12px; }
+  .meal-table {
+    min-width: 700px; width: 100%; border-collapse: collapse; border-radius: 12px;
+    overflow: hidden; box-shadow: 0 2px 12px rgba(19,78,74,0.08); font-size: 13px;
+  }
+  .meal-table thead th {
+    background: var(--teal-mid); color: white; padding: 12px 10px; font-size: 13px;
+    font-weight: 600; text-align: center;
+  }
+  .meal-table thead th:first-child { background: var(--teal-dark); }
+  .meal-table tbody td {
+    padding: 10px; border-bottom: 1px solid #ccfbf1; background: white;
+    vertical-align: top; text-align: center; line-height: 1.5;
+  }
+  .meal-table tbody td:first-child {
+    background: var(--teal-pale); font-weight: 700; font-size: 12px; text-align: center;
+    color: var(--teal-dark); white-space: nowrap;
+  }
+  .meal-table tbody td:first-child small { display: block; font-weight: 400; color: var(--sage); font-size: 11px; }
+
+  .reminder {
+    background: linear-gradient(135deg, var(--teal-pale), #ccfbf1); border-left: 4px solid var(--teal-mid);
+    border-radius: 10px; padding: 14px 16px; font-size: 13px; line-height: 1.7; color: var(--text); margin-top: 12px;
+  }
+
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  @media (max-width: 500px) { .compare-grid { grid-template-columns: 1fr; } }
+  .compare-box {
+    border-radius: 12px; padding: 18px; text-align: center;
+  }
+  .compare-box.thyroid-box { background: linear-gradient(135deg, #C2185B, #8B2252); color: white; }
+  .compare-box.diabetes-box { background: linear-gradient(135deg, #2563EB, #1A3A5C); color: white; }
+  .compare-box h4 { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+  .compare-box p { font-size: 13px; line-height: 1.6; opacity: 0.92; }
+
+  .tip-card {
+    background: white; border-radius: 12px; padding: 18px; margin-bottom: 14px;
+    box-shadow: 0 2px 8px rgba(19,78,74,0.06); border-left: 4px solid var(--teal-mid);
+  }
+  .tip-card h3 { font-size: 16px; color: var(--teal-dark); margin-bottom: 6px; }
+  .tip-card p { font-size: 14px; line-height: 1.65; }
+  .tip-card .icon { font-size: 22px; margin-bottom: 6px; }
+
+  .health-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+  @media (min-width: 600px) { .health-grid { grid-template-columns: 1fr 1fr 1fr; } }
+  .bottom-box {
+    background: linear-gradient(135deg, var(--teal-mid), var(--teal-dark)); color: white;
+    border-radius: 12px; padding: 18px; text-align: center;
+  }
+  .bottom-box h4 { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+  .bottom-box p { font-size: 13px; line-height: 1.6; opacity: 0.92; }
+
+  .footer { text-align: center; padding: 40px 20px; background: var(--teal-pale); margin-top: 20px; }
+  .footer h3 { font-size: 24px; color: var(--teal-dark); font-weight: 400; margin-bottom: 8px; }
+  .footer p { font-size: 14px; color: var(--sage); font-style: italic; }
+
+  .swipe-hint { text-align: center; font-size: 12px; color: var(--sage); margin-bottom: 8px; }
+  ul.food-list { list-style: none; padding: 0; }
+  ul.food-list li { padding: 2px 0; }
+  ul.food-list li::before { content: '• '; color: var(--teal-mid); }
+</style>
+</head>
+<body>
+
+<!-- CROSS NAV -->
+<div class="cross-nav">
+  <a href="Tiroid_Dostu_Diyet_Programi.html" class="pink">🩷 Annemin Rehberi</a>
+  <a href="Aile_Ortak_Beslenme_Rehberi.html" class="green active">💚 Aile Ortak</a>
+  <a href="Diyabet_Dostu_Diyet_Programi.html" class="blue">💙 Babamın Rehberi</a>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-label">Sağlıklı Yaşam Rehberi</div>
+  <h1>Aile Ortak</h1>
+  <h2>Beslenme Rehberi</h2>
+  <p class="dedication">Hipotiroidizm + Tip 2 Diyabet — Tek Masa, Tek Menü</p>
+  <div class="disclaimer"><strong>Önemli Not:</strong> Bu rehber iki hastalığın ortak beslenme kesişimini gösterir. Her iki ilacın zamanlaması farklıdır — kişiye özel detaylar için bireysel rehberlere bakın.</div>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <a href="#kurallar">Ortak Kurallar</a>
+  <a href="#besinler">Besinler</a>
+  <a href="#menu">Aile Menüsü</a>
+  <a href="#ilac">İlaç Rehberi</a>
+  <a href="#ipuclari">Pratik İpuçları</a>
+</div>
+
+<!-- 1. ORTAK KURALLAR -->
+<div class="section" id="kurallar">
+  <div class="section-title">Ortak Beslenme Kuralları</div>
+  <div class="section-subtitle">İki hastalık için de geçerli olan temel ilkeler</div>
+  <div class="divider"></div>
+
+  <div class="card-row three">
+    <div class="card">
+      <span class="tag both">İkisi için de</span>
+      <p><strong>Düzenli öğün:</strong> 3 ana + 2 ara öğün, her gün aynı saatlerde. Öğün atlamak ikisinde de metabolizmayı bozar ve hormonal dengeyi sarsar.</p>
+    </div>
+    <div class="card">
+      <span class="tag both">İkisi için de</span>
+      <p><strong>Bol protein:</strong> Her öğünde mutlaka protein olsun. Tavuk, balık, yumurta, baklagiller. Protein hem tiroid hem şeker dengesi için temel taşı.</p>
+    </div>
+    <div class="card">
+      <span class="tag both">İkisi için de</span>
+      <p><strong>Tam tahıl:</strong> Beyaz un ve beyaz pirinç yerine bulgur, kinoa, yulaf, çavdar ekmeği. Lif hem metabolizmayı hem kan şekerini dengeler.</p>
+    </div>
+  </div>
+
+  <div class="card-row three">
+    <div class="card">
+      <span class="tag both">İkisi için de</span>
+      <p><strong>Su:</strong> Günde 2-2.5 litre. Tiroidde ödemi azaltır, diyabette böbrekleri korur ve şeker dengesini destekler.</p>
+    </div>
+    <div class="card">
+      <span class="tag both">İkisi için de</span>
+      <p><strong>Hareket:</strong> Günde 30 dk yürüyüş. Tiroid metabolizmasını hızlandırır, diyabette insülin duyarlılığını artırır.</p>
+    </div>
+    <div class="card">
+      <span class="tag both">İkisi için de</span>
+      <p><strong>Uyku:</strong> 7-8 saat düzenli. Kortizol, insülin ve tiroid hormonlarının hepsi uyku sırasında dengelenir.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 2. BESİNLER -->
+<div class="section" id="besinler">
+  <div class="section-title">İkisine de Uygun Besinler</div>
+  <div class="section-subtitle">Tek alışveriş listesi, iki hastalığa fayda</div>
+  <div class="divider"></div>
+
+  <table class="food-table" style="margin-bottom: 16px;">
+    <thead><tr><th class="yes">✓ İKİSİNE DE UYGUN — BOL TÜKETİN</th></tr></thead>
+    <tbody>
+      <tr><td>🥚 <strong>Yumurta</strong> — hem tiroid için selenyum, hem diyabet için protein. Her gün 2 adet güvenli.</td></tr>
+      <tr><td>🐟 <strong>Balık (somon, sardalye, ton)</strong> — omega-3 iltihap azaltır, ikisinde de faydalı. Haftada 2-3 kez.</td></tr>
+      <tr><td>🍗 <strong>Tavuk, hindi</strong> — yağsız protein, düşük Gİ, tiroid dostu. Ana öğünlerin temeli.</td></tr>
+      <tr><td>🫘 <strong>Mercimek, nohut, kuru fasulye</strong> — lif + protein + düşük Gİ. İkisi için de süper besin.</td></tr>
+      <tr><td>🥣 <strong>Yulaf, bulgur, kinoa</strong> — tam tahıl, düşük Gİ, selenyum ve lif deposu.</td></tr>
+      <tr><td>🥦 <strong>Pişmiş brokoli, ıspanak, kabak</strong> — pişince guatrojen etkisi kaybolur, düşük Gİ, vitamin deposu.</td></tr>
+      <tr><td>🥑 <strong>Zeytinyağı, avokado</strong> — sağlıklı yağ, iltihap azaltır, tokluk sağlar.</td></tr>
+      <tr><td>🥜 <strong>Badem, ceviz, Brezilya fıstığı</strong> — selenyum (tiroid), sağlıklı yağ (diyabet). Günde 1 avuç.</td></tr>
+      <tr><td>🍎 <strong>Elma, armut, çilek, yaban mersini</strong> — düşük Gİ meyveler. Günde 2-3 porsiyon.</td></tr>
+      <tr><td>🥛 <strong>Yoğurt, kefir, lor peyniri</strong> — probiyotik + protein. Şekersiz olmalı.</td></tr>
+      <tr><td>🌿 <strong>Tarçın</strong> — insülin duyarlılığını artırır, yulaf ve yoğurtlara ekleyin.</td></tr>
+    </tbody>
+  </table>
+
+  <table class="food-table">
+    <thead><tr><th class="no">✗ İKİSİ İÇİN DE KAÇINILACAKLAR</th></tr></thead>
+    <tbody>
+      <tr><td>🚫 <strong>Beyaz ekmek, beyaz pirinç, beyaz makarna</strong> — şekeri fırlatır, metabolizmayı yavaşlatır.</td></tr>
+      <tr><td>🚫 <strong>Şekerli içecekler ve tatlılar</strong> — kola, meyve suyu, baklava, kurabiye.</td></tr>
+      <tr><td>🚫 <strong>İşlenmiş gıdalar</strong> — hazır yemek, salam, sosis, cips, paketli atıştırmalık.</td></tr>
+      <tr><td>🚫 <strong>Kızartmalar, trans yağ</strong> — iltihap artırır, insülin direncini kötüleştirir.</td></tr>
+      <tr><td>🚫 <strong>Soya ürünleri</strong> — tiroid ilaç emilimini engeller.</td></tr>
+      <tr><td>🚫 <strong>Alkol</strong> — ikisinde de hormonal dengeyi ve kan şekerini bozar.</td></tr>
+      <tr><td>🚫 <strong>Bal, reçel, pekmez</strong> — "doğal" ama yine şeker. İkisi için de zararlı.</td></tr>
+      <tr><td>🚫 <strong>Çiğ lahana, çiğ karnabahar</strong> — guatrojen etkisi. Pişmiş hali güvenli.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="food-note">
+    <strong>Altın kural:</strong> Tabağın yarısı sebze, çeyreği protein, çeyreği tam tahıl olsun. Bu formül hem tiroid hem diyabet için idealdir. İkisi de aynı tabaktan yiyebilir.
+  </div>
+</div>
+
+<!-- 3. AİLE MENÜSÜ -->
+<div class="section" id="menu">
+  <div class="section-title">Haftalık Aile Menüsü</div>
+  <div class="section-subtitle">Tek masa, tek yemek — ikisine de uygun</div>
+  <div class="divider"></div>
+  <p class="swipe-hint">← Tabloyu yana kaydırın →</p>
+  <div class="meal-plan">
+    <table class="meal-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Pazartesi</th>
+          <th>Salı</th>
+          <th>Çarşamba</th>
+          <th>Perşembe</th>
+          <th>Cuma</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>KAHVALTI</strong><small>07:00</small></td>
+          <td>2 haşlanmış yumurta, 1 dilim çavdar ekmek, domates, salatalık, 5 zeytin</td>
+          <td>Yulaf ezmesi (50g) süt, tarçın, çilek, 5 badem</td>
+          <td>Menemen (2 yumurta, domates, biber), 1 dilim tam tahıl ekmek</td>
+          <td>Lor peyniri (100g), ceviz, 1 dilim çavdar ekmek, roka</td>
+          <td>Ispanaklı omlet (2 yumurta), zeytin, domates</td>
+        </tr>
+        <tr>
+          <td><strong>ARA ÖĞÜN</strong><small>10:30</small></td>
+          <td>1 avuç badem + 1 elma</td>
+          <td>2-3 Brezilya fıstığı + yoğurt (150g) tarçınlı</td>
+          <td>Havuç-salatalık çubuğu + humus</td>
+          <td>1 armut + 10 badem</td>
+          <td>Kefir (200ml) + keten tohumu</td>
+        </tr>
+        <tr>
+          <td><strong>ÖĞLE</strong><small>13:00</small></td>
+          <td>Izgara tavuk (150g), 4 kaşık bulgur pilavı, bol yeşil salata zeytinyağı-limon</td>
+          <td>Fırın somon (150g), buharda brokoli, 3 kaşık kinoa</td>
+          <td>Mercimek çorbası, ton balıklı roka salatası</td>
+          <td>Tavuk sote (mantar, biber, kabak), 3 kaşık bulgur</td>
+          <td>Izgara hindi (150g), fırın sebze (kabak, patlıcan, biber)</td>
+        </tr>
+        <tr>
+          <td><strong>İKİNDİ</strong><small>16:00</small></td>
+          <td>Lor peyniri (80g) + ceviz + tarçın</td>
+          <td>Yeşil çay + 2-3 kare bitter çikolata (%70+)</td>
+          <td>Yoğurt (150g) + yaban mersini</td>
+          <td>1 elma + 1 yemek kaşığı fıstık ezmesi</td>
+          <td>Avokado yarım + limon + 1 dilim tam tahıl ekmek</td>
+        </tr>
+        <tr>
+          <td><strong>AKŞAM</strong><small>19:00</small></td>
+          <td>Nohut yemeği (zeytinyağlı), cacık, salata</td>
+          <td>Fırın balık (levrek/çipura), zeytinyağlı enginar, yoğurt</td>
+          <td>Tavuk çorbası, zeytinyağlı yeşil fasulye</td>
+          <td>Kuru fasulye (pirinçsiz), çoban salata, ayran</td>
+          <td>Sebzeli mercimek köftesi, cacık, salata</td>
+        </tr>
+        <tr>
+          <td><strong>GECE</strong><small>21:00</small></td>
+          <td>10 badem + ıhlamur</td>
+          <td>Yoğurt (100g) + tarçın</td>
+          <td>1 avuç ceviz + zencefil çayı</td>
+          <td>Lor peyniri (50g) + 5 badem</td>
+          <td>Kefir (150ml)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="reminder">
+    <strong>Hatırlatıcı:</strong> Her gün 2-2.5 L su • Ekmek max 2 dilim (tam tahıl/çavdar) • Pirinç yerine bulgur • Yemekten sonra birlikte 15 dk yürüyüş • Brezilya fıstığı 2-3 adet (selenyum) • Pişmiş sebzeleri tercih edin
+  </div>
+</div>
+
+<!-- 4. İLAÇ KARŞILAŞTIRMASI -->
+<div class="section" id="ilac">
+  <div class="section-title">İlaç Zamanlaması</div>
+  <div class="section-subtitle">İkisinin ilacı farklı zamanda alınır — karıştırmayın</div>
+  <div class="divider"></div>
+
+  <div class="compare-grid">
+    <div class="compare-box thyroid-box">
+      <h4>🩷 Anne — Levotiroksin 75 mcg</h4>
+      <p>Sabah kalkar kalkmaz, <strong>aç karnına</strong> bir bardak su ile.<br><br>Kahvaltıya en az <strong>30-60 dakika</strong> bekle.<br><br>Kahve ilaçtan <strong>1 saat sonra</strong>.<br><br>Her gün <strong>aynı saatte</strong>.</p>
+    </div>
+    <div class="compare-box diabetes-box">
+      <h4>💙 Baba — Metformin</h4>
+      <p><strong>Yemekle birlikte</strong> veya yemekten hemen sonra al.<br><br>Aç karnına alma — <strong>mide rahatsızlığı</strong> yapar.<br><br>Her gün <strong>aynı saatlerde</strong>.<br><br>İlacı asla <strong>kendi başına kesme</strong>.</p>
+    </div>
+  </div>
+
+  <div class="reminder">
+    <strong>Örnek sabah rutini:</strong> 06:30 Anne kalkar → Levotiroksin alır · 07:00 Birlikte kahvaltıya oturulur → Baba Metformin'i kahvaltı sırasında alır · 07:30 Anne kahvesini içebilir · Herkes 2-2.5 L su hedefler
+  </div>
+</div>
+
+<!-- 5. PRATİK İPUÇLARI -->
+<div class="section" id="ipuclari">
+  <div class="section-title">Birlikte Uygulanacak Pratik İpuçları</div>
+  <div class="section-subtitle">Aile olarak sağlıklı yaşam rutini</div>
+  <div class="divider"></div>
+
+  <div class="tip-card">
+    <div class="icon">🛒</div>
+    <h3>Tek Alışveriş Listesi</h3>
+    <p>Yumurta, tavuk, balık (haftada 2-3), mercimek, nohut, bulgur, yulaf, çavdar ekmeği, mevsim sebzeleri (kabak, brokoli, ıspanak), elma, çilek, yoğurt, lor, zeytinyağı, badem, ceviz, Brezilya fıstığı, tarçın. Bu liste ikisine de yeter.</p>
+  </div>
+
+  <div class="tip-card">
+    <div class="icon">🍽️</div>
+    <h3>Tabak Kuralı</h3>
+    <p>Her öğünde tabağın yarısı sebze, çeyreği protein (tavuk/balık/yumurta/baklagil), çeyreği tam tahıl (bulgur/kinoa). Bu formül hem tiroid hem diyabet için ideal. Aynı tabak, aynı yemek.</p>
+  </div>
+
+  <div class="tip-card">
+    <div class="icon">🚶‍♂️</div>
+    <h3>Akşam Yemeğinden Sonra Birlikte Yürüyüş</h3>
+    <p>Yemekten 15-30 dakika sonra 15-20 dakika birlikte yürüyün. Baba için tokluk şekerini düşürür, anne için metabolizmayı hızlandırır. Birlikte yapmak alışkanlık oluşturur.</p>
+  </div>
+
+  <div class="tip-card">
+    <div class="icon">💧</div>
+    <h3>Su Takibi</h3>
+    <p>İkisi de günde 2-2.5 litre hedeflemeli. Sabah 1 bardak, her öğünden önce 1 bardak, aralarda 1 bardak. Buzdolabına 2 şişe koyun — gün sonunda bitmiş olmalı.</p>
+  </div>
+
+  <div class="tip-card">
+    <div class="icon">📅</div>
+    <h3>Kontrol Takvimi</h3>
+    <p><strong>Her 3 ayda bir birlikte:</strong> Anne TSH, T3, T4 + Baba HbA1c. <strong>Yılda bir birlikte:</strong> D vitamini, B12, demir, kolesterol, böbrek fonksiyonları. Randevuları aynı güne koyun — birbirinize hatırlatın.</p>
+  </div>
+
+  <div class="tip-card">
+    <div class="icon">🌙</div>
+    <h3>Gece Rutini</h3>
+    <p>21:00'de hafif bir atıştırmalık (badem, yoğurt, lor). 22:00-22:30 arası yatağa. 7-8 saat uyku ikisi için de hormon dengesi açısından kritik. Ekran süresini azaltın.</p>
+  </div>
+
+  <div class="health-grid" style="margin-top: 20px;">
+    <div class="bottom-box">
+      <h4>🩷 Anneme Özel</h4>
+      <p>Selenyum için Brezilya fıstığı 2-3 adet · Sebzeleri pişir, çiğ yeme · Levotiroksin aç karnına · D vitamini ve B12 kontrolü</p>
+    </div>
+    <div class="bottom-box">
+      <h4>💚 Ortak Hedefler</h4>
+      <p>2-2.5 L su · 30 dk yürüyüş · 3+2 öğün sabit saatte · Tam tahıl · Bol sebze + protein · 7-8 saat uyku</p>
+    </div>
+    <div class="bottom-box">
+      <h4>💙 Babama Özel</h4>
+      <p>Ekmek max 2 dilim · Pirinç yerine bulgur · Tatlı yerine bitter çikolata · Metformin yemekle · HbA1c takibi</p>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <h3>Sağlıklı günler dileriz.</h3>
+  <p>Bu program ailemiz için sevgiyle hazırlanmıştır.</p>
+</div>
+
+</body>
+</html>
